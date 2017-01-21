@@ -43,7 +43,6 @@ namespace VRTK
         /// <param name="ButtonTwo">The second generic button.</param>
         /// <param name="SystemMenu">The system menu button.</param>
         /// <param name="Body">The encompassing mesh of the controller body.</param>
-        /// <param name="StartMenu">The start menu button.</param>
         public enum ControllerElements
         {
             AttachPoint,
@@ -54,8 +53,7 @@ namespace VRTK
             ButtonOne,
             ButtonTwo,
             SystemMenu,
-            Body,
-            StartMenu
+            Body
         }
 
         /// <summary>
@@ -495,48 +493,6 @@ namespace VRTK
         /// <returns>Returns true if the button has just been released.</returns>
         public abstract bool IsButtonTwoTouchedUpOnIndex(uint index);
 
-        /// <summary>
-        /// The IsStartMenuPressedOnIndex method is used to determine if the controller button is being pressed down continually.
-        /// </summary>
-        /// <param name="index">The index of the tracked object to check for.</param>
-        /// <returns>Returns true if the button is continually being pressed.</returns>
-        public abstract bool IsStartMenuPressedOnIndex(uint index);
-
-        /// <summary>
-        /// The IsStartMenuPressedDownOnIndex method is used to determine if the controller button has just been pressed down.
-        /// </summary>
-        /// <param name="index">The index of the tracked object to check for.</param>
-        /// <returns>Returns true if the button has just been pressed down.</returns>
-        public abstract bool IsStartMenuPressedDownOnIndex(uint index);
-
-        /// <summary>
-        /// The IsStartMenuPressedUpOnIndex method is used to determine if the controller button has just been released.
-        /// </summary>
-        /// <param name="index">The index of the tracked object to check for.</param>
-        /// <returns>Returns true if the button has just been released.</returns>
-        public abstract bool IsStartMenuPressedUpOnIndex(uint index);
-
-        /// <summary>
-        /// The IsStartMenuTouchedOnIndex method is used to determine if the controller button is being touched down continually.
-        /// </summary>
-        /// <param name="index">The index of the tracked object to check for.</param>
-        /// <returns>Returns true if the button is continually being touched.</returns>
-        public abstract bool IsStartMenuTouchedOnIndex(uint index);
-
-        /// <summary>
-        /// The IsStartMenuTouchedDownOnIndex method is used to determine if the controller button has just been touched down.
-        /// </summary>
-        /// <param name="index">The index of the tracked object to check for.</param>
-        /// <returns>Returns true if the button has just been touched down.</returns>
-        public abstract bool IsStartMenuTouchedDownOnIndex(uint index);
-
-        /// <summary>
-        /// The IsStartMenuTouchedUpOnIndex method is used to determine if the controller button has just been released.
-        /// </summary>
-        /// <param name="index">The index of the tracked object to check for.</param>
-        /// <returns>Returns true if the button has just been released.</returns>
-        public abstract bool IsStartMenuTouchedUpOnIndex(uint index);
-
         protected GameObject GetSDKManagerControllerLeftHand(bool actual = false)
         {
             var sdkManager = VRTK_SDKManager.instance;
@@ -570,7 +526,7 @@ namespace VRTK
         protected bool CheckControllerLeftHand(GameObject controller, bool actual)
         {
             var sdkManager = VRTK_SDKManager.instance;
-            if (sdkManager != null && controller)
+            if (sdkManager != null)
             {
                 return (actual ? controller.Equals(sdkManager.actualLeftController) : controller.Equals(sdkManager.scriptAliasLeftController));
             }
@@ -580,7 +536,7 @@ namespace VRTK
         protected bool CheckControllerRightHand(GameObject controller, bool actual)
         {
             var sdkManager = VRTK_SDKManager.instance;
-            if (sdkManager != null && controller)
+            if (sdkManager != null)
             {
                 return (actual ? controller.Equals(sdkManager.actualRightController) : controller.Equals(sdkManager.scriptAliasRightController));
             }

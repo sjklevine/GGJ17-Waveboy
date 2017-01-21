@@ -51,7 +51,7 @@
         {
             var rightHand = VRTK_DeviceFinder.GetControllerRightHand(true);
             controllerIndex = VRTK_DeviceFinder.GetControllerIndex(rightHand);
-            if (ForwardPressed() || Input.GetKeyUp(KeyCode.Space))
+            if (ForwardPressed() || Input.GetKeyUp(KeyCode.F8))
             {
                 var nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
                 if (nextSceneIndex >= SceneManager.sceneCountInBuildSettings)
@@ -61,7 +61,7 @@
                 SceneManager.LoadScene(nextSceneIndex);
             }
 
-            if (BackPressed() || Input.GetKeyUp(KeyCode.Backspace))
+            if (BackPressed() || Input.GetKeyUp(KeyCode.F9))
             {
                 var previousSceneIndex = SceneManager.GetActiveScene().buildIndex - 1;
                 if (previousSceneIndex < 0)

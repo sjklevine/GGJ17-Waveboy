@@ -48,7 +48,7 @@ public class VZPlayer : MonoBehaviour
    public bool Reverse = false;
 
    public static VZPlayer Instance { get; private set; }
-   public static VZController Controller { get; private set; }
+    public VZController Controller;
 
    public void Initialize(Vector3 position, Quaternion rotation)
    {
@@ -229,8 +229,9 @@ public class VZPlayer : MonoBehaviour
          SetState(InitialState());
       }
       else
-      {
-         Restart(true);
+        {
+            Debug.Log("Restart on start");
+            Restart(true);
       }
    }
 
@@ -293,7 +294,8 @@ public class VZPlayer : MonoBehaviour
 
    protected virtual void Restart(bool initLevel)
    {
-      if (initLevel)
+        
+        if (initLevel)
       {
 #if VZ_PLAYMAKER
          // Let PlayMaker FSMs know that a restart took place.
@@ -467,8 +469,8 @@ public class VZPlayer : MonoBehaviour
       {
          Controller.LeftButton.Clear();
          Controller.RightButton.Clear();
-
-         Controller.Recenter();
+          
+            Controller.Recenter();
 
          Restart(true);
       }

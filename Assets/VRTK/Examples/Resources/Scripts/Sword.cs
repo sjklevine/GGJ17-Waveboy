@@ -5,6 +5,7 @@
     public class Sword : VRTK_InteractableObject
     {
         private VRTK_ControllerActions controllerActions;
+        private VRTK_ControllerEvents controllerEvents;
         private float impactMagnifier = 120f;
         private float collisionForce = 0f;
         private float maxCollisionForce = 4000f;
@@ -18,6 +19,7 @@
         {
             base.Grabbed(grabbingObject);
             controllerActions = grabbingObject.GetComponent<VRTK_ControllerActions>();
+            controllerEvents = grabbingObject.GetComponent<VRTK_ControllerEvents>();
         }
 
         protected override void Awake()
@@ -28,9 +30,9 @@
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (controllerActions && IsGrabbed())
+            if (controllerActions && controllerEvents && IsGrabbed())
             {
-                collisionForce = VRTK_DeviceFinder.GetControllerVelocity(controllerActions.gameObject).magnitude * impactMagnifier;
+                collisionForce = controllerEvents.GetVelocity().magnitude * impactMagnifier;
                 var hapticStrength = collisionForce / maxCollisionForce;
                 controllerActions.TriggerHapticPulse(hapticStrength, 0.5f, 0.01f);
             }

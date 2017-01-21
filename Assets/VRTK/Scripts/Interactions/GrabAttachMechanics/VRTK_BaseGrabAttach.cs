@@ -202,13 +202,14 @@ namespace VRTK.GrabAttachMechanics
                 if (grabbingObject)
                 {
                     var grabbingObjectScript = grabbingObject.GetComponent<VRTK_InteractGrab>();
+                    var controllerEvents = grabbingObject.GetComponent<VRTK_ControllerEvents>();
 
                     var grabbingObjectThrowMultiplier = grabbingObjectScript.throwMultiplier;
 
                     var origin = VRTK_DeviceFinder.GetControllerOrigin(grabbingObject);
 
-                    var velocity = VRTK_DeviceFinder.GetControllerVelocity(grabbingObject);
-                    var angularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(grabbingObject);
+                    var velocity = (controllerEvents ? controllerEvents.GetVelocity() : Vector3.zero);
+                    var angularVelocity = (controllerEvents ? controllerEvents.GetAngularVelocity() : Vector3.zero);
 
                     if (origin != null)
                     {

@@ -182,17 +182,8 @@ namespace VRTK
             CreateInstance();
             if (!VRTK_SharedMethods.IsEditTime())
             {
-                SetupHeadset();
                 SetupControllers();
                 GetBoundariesSDK().InitBoundaries();
-            }
-        }
-
-        private void SetupHeadset()
-        {
-            if (!actualHeadset.GetComponent<VRTK_TrackedHeadset>())
-            {
-                actualHeadset.AddComponent<VRTK_TrackedHeadset>();
             }
         }
 

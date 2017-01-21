@@ -154,7 +154,10 @@ namespace VRTK
 
             base.InitPointer();
 
-            ResizeObjectInteractor();
+            if (showPointerTip && objectInteractor)
+            {
+                objectInteractor.transform.localScale = pointerTip.transform.localScale * 1.05f;
+            }
 
             SetPointerTransform(pointerLength, pointerThickness);
             TogglePointer(false);
@@ -197,16 +200,6 @@ namespace VRTK
 
                 pointerBeam.GetComponentInChildren<Renderer>().enabled = false;
                 pointerTip.GetComponentInChildren<Renderer>().enabled = false;
-            }
-
-            ResizeObjectInteractor();
-        }
-
-        private void ResizeObjectInteractor()
-        {
-            if (showPointerTip && pointerTip && objectInteractor)
-            {
-                objectInteractor.transform.localScale = pointerTip.transform.localScale * 1.05f;
             }
         }
 

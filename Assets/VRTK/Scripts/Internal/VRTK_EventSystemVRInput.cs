@@ -16,9 +16,8 @@
 
         public override void Process()
         {
-            for (int i = 0; i < pointers.Count; i++)
+            foreach (var pointer in pointers)
             {
-                VRTK_UIPointer pointer = pointers[i];
                 if (pointer.gameObject.activeInHierarchy && pointer.enabled)
                 {
                     List<RaycastResult> results = new List<RaycastResult>();
@@ -87,25 +86,10 @@
             return (canvasCheck && canvasCheck.enabled ? true : false);
         }
 
-        private void CheckPointerHoverClick(VRTK_UIPointer pointer, List<RaycastResult> results)
-        {
-            if (pointer.hoverDurationTimer > 0f)
-            {
-                pointer.hoverDurationTimer -= Time.deltaTime;
-            }
-
-            if (pointer.canClickOnHover && pointer.hoverDurationTimer <= 0f)
-            {
-                pointer.canClickOnHover = false;
-                ClickOnDown(pointer, results, true);
-            }
-        }
-
         private void Hover(VRTK_UIPointer pointer, List<RaycastResult> results)
         {
             if (pointer.pointerEventData.pointerEnter)
             {
-                CheckPointerHoverClick(pointer, results);
                 if (!ValidElement(pointer.pointerEventData.pointerEnter))
                 {
                     return;
@@ -186,9 +170,9 @@
             }
         }
 
-        private void ClickOnDown(VRTK_UIPointer pointer, List<RaycastResult> results, bool forceClick = false)
+        private void ClickOnDown(VRTK_UIPointer pointer, List<RaycastResult> results)
         {
-            pointer.pointerEventData.eligibleForClick = (forceClick ? true : pointer.ValidClick(true));
+            pointer.pointerEventData.eligibleForClick = pointer.ValidClick(true);
 
             if (IsEligibleClick(pointer, results))
             {
