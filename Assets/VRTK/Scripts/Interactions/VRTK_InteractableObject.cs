@@ -362,7 +362,6 @@ namespace VRTK
         {
             OnInteractableObjectUnused(SetInteractableObjectEvent(previousUsingObject));
             ResetUsingObject();
-            usingState = 0;
             usingObject = null;
         }
 

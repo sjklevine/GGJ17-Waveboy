@@ -320,6 +320,8 @@ namespace VRTK
             maximumRenderTargetDimension = Mathf.Max(2, maximumRenderTargetDimension);
             renderScaleFillRateStepSizeInPercent = Mathf.Max(1, renderScaleFillRateStepSizeInPercent);
             msaaLevel = msaaLevel == 1 ? 0 : Mathf.Clamp(Mathf.ClosestPowerOfTwo(msaaLevel), 0, 8);
+
+            CreateOrDestroyDebugVisualization();
         }
 
         private void Update()
@@ -391,6 +393,7 @@ namespace VRTK
                         break;
                     case CommandLineArguments.DrawDebugVisualization:
                         drawDebugVisualization = true;
+                        CreateOrDestroyDebugVisualization();
                         break;
                     case CommandLineArguments.MSAALevel:
                         msaaLevel = int.Parse(nextArgument);
@@ -409,6 +412,7 @@ namespace VRTK
             if (Input.GetKeyDown(KeyboardShortcuts.ToggleDrawDebugVisualization))
             {
                 drawDebugVisualization = !drawDebugVisualization;
+                CreateOrDestroyDebugVisualization();
             }
             else if (Input.GetKeyDown(KeyboardShortcuts.ToggleOverrideRenderScale))
             {
