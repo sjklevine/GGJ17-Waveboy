@@ -44,6 +44,7 @@ namespace VRTK
         /// <summary>
         /// Button types
         /// </summary>
+        /// <param name="Undefined">No button specified</param>
         /// <param name="Trigger_Hairline">The trigger is squeezed past the current hairline threshold.</param>
         /// <param name="Trigger_Touch">The trigger is squeezed a small amount.</param>
         /// <param name="Trigger_Press">The trigger is squeezed about half way in.</param>
@@ -56,7 +57,9 @@ namespace VRTK
         /// <param name="Touchpad_Press">The touchpad is pressed (to the point of hearing a click).</param>
         /// <param name="Button_One_Touch">The button one is touched.</param>
         /// <param name="Button_One_Press">The button one is pressed.</param>
-        /// <param name="Undefined">No button specified</param>
+        /// <param name="Button_Two_Touch">The button one is touched.</param>
+        /// <param name="Button_Two_Press">The button one is pressed.</param>
+        /// <param name="Start_Menu_Press">The button one is pressed.</param>
         public enum ButtonAlias
         {
             Undefined,
@@ -73,7 +76,8 @@ namespace VRTK
             Button_One_Touch,
             Button_One_Press,
             Button_Two_Touch,
-            Button_Two_Press
+            Button_Two_Press,
+            Start_Menu_Press
         }
 
         [Header("Action Alias Buttons")]
@@ -189,6 +193,12 @@ namespace VRTK
         /// </summary>
         [HideInInspector]
         public bool buttonTwoTouched = false;
+
+        /// <summary>
+        /// This will be true if start menu is held down.
+        /// </summary>
+        [HideInInspector]
+        public bool startMenuPressed = false;
 
         /// <summary>
         /// This will be true if the button aliased to the pointer is held down.
@@ -356,6 +366,15 @@ namespace VRTK
         public event ControllerInteractionEventHandler ButtonTwoReleased;
 
         /// <summary>
+        /// Emitted when start menu is pressed.
+        /// </summary>
+        public event ControllerInteractionEventHandler StartMenuPressed;
+        /// <summary>
+        /// Emitted when start menu is released.
+        /// </summary>
+        public event ControllerInteractionEventHandler StartMenuReleased;
+
+        /// <summary>
         /// Emitted when the pointer toggle alias button is pressed.
         /// </summary>
         public event ControllerInteractionEventHandler AliasPointerOn;
@@ -423,9 +442,6 @@ namespace VRTK
 
         private float hairTriggerDelta;
         private float hairGripDelta;
-
-        private Vector3 controllerVelocity = Vector3.zero;
-        private Vector3 controllerAngularVelocity = Vector3.zero;
 
         public virtual void OnTriggerPressed(ControllerInteractionEventArgs e)
         {
@@ -675,6 +691,22 @@ namespace VRTK
             }
         }
 
+        public virtual void OnStartMenuPressed(ControllerInteractionEventArgs e)
+        {
+            if (StartMenuPressed != null)
+            {
+                StartMenuPressed(this, e);
+            }
+        }
+
+        public virtual void OnStartMenuReleased(ControllerInteractionEventArgs e)
+        {
+            if (StartMenuReleased != null)
+            {
+                StartMenuReleased(this, e);
+            }
+        }
+
         public virtual void OnAliasPointerOn(ControllerInteractionEventArgs e)
         {
             if (AliasPointerOn != null)
@@ -791,20 +823,20 @@ namespace VRTK
         /// The GetVelocity method is useful for getting the current velocity of the physical game controller. This can be useful to determine the speed at which the controller is being swung or the direction it is being moved in.
         /// </summary>
         /// <returns>A 3 dimensional vector containing the current real world physical controller velocity.</returns>
+        [Obsolete("`VRTK_ControllerEvents.GetVelocity()` has been replaced with `VRTK_DeviceFinder.GetControllerVelocity(givenController)`. This method will be removed in a future version of VRTK.")]
         public Vector3 GetVelocity()
         {
-            SetVelocity();
-            return controllerVelocity;
+            return VRTK_DeviceFinder.GetControllerVelocity(gameObject);
         }
 
         /// <summary>
         /// The GetAngularVelocity method is useful for getting the current rotational velocity of the physical game controller. This can be useful for determining which way the controller is being rotated and at what speed the rotation is occurring.
         /// </summary>
         /// <returns>A 3 dimensional vector containing the current real world physical controller angular (rotational) velocity.</returns>
+        [Obsolete("`VRTK_ControllerEvents.GetAngularVelocity()` has been replaced with `VRTK_DeviceFinder.GetControllerAngularVelocity(givenController)`. This method will be removed in a future version of VRTK.")]
         public Vector3 GetAngularVelocity()
         {
-            SetVelocity();
-            return controllerAngularVelocity;
+            return VRTK_DeviceFinder.GetControllerAngularVelocity(gameObject);
         }
 
         /// <summary>
@@ -867,7 +899,7 @@ namespace VRTK
         /// <returns>Is true if any of the controller buttons are currently being pressed.</returns>
         public bool AnyButtonPressed()
         {
-            return (triggerPressed || gripPressed || touchpadPressed || buttonOnePressed || buttonTwoPressed);
+            return (triggerPressed || gripPressed || touchpadPressed || buttonOnePressed || buttonTwoPressed || startMenuPressed);
         }
 
         /// <summary>
@@ -907,6 +939,8 @@ namespace VRTK
                     return buttonTwoPressed;
                 case ButtonAlias.Button_Two_Touch:
                     return buttonTwoTouched;
+                case ButtonAlias.Start_Menu_Press:
+                    return startMenuPressed;
             }
             return false;
         }
@@ -1157,6 +1191,12 @@ namespace VRTK
                 EmitAlias(ButtonAlias.Button_Two_Touch, false, 0f, ref buttonTwoTouched);
             }
 
+            if (startMenuPressed)
+            {
+                OnStartMenuReleased(SetButtonEvent(ref startMenuPressed, false, 0f));
+                EmitAlias(ButtonAlias.Start_Menu_Press, false, 0f, ref startMenuPressed);
+            }
+
             triggerAxisChanged = false;
             gripAxisChanged = false;
             touchpadAxisChanged = false;
@@ -1187,8 +1227,6 @@ namespace VRTK
             {
                 return;
             }
-
-            VRTK_SDK_Bridge.ControllerProcessUpdate(controllerIndex);
 
             Vector2 currentTriggerAxis = VRTK_SDK_Bridge.GetTriggerAxisOnIndex(controllerIndex);
             Vector2 currentGripAxis = VRTK_SDK_Bridge.GetGripAxisOnIndex(controllerIndex);
@@ -1391,6 +1429,18 @@ namespace VRTK
                 EmitAlias(ButtonAlias.Button_Two_Touch, false, 0f, ref buttonTwoTouched);
             }
 
+            //StartMenu Pressed
+            if (VRTK_SDK_Bridge.IsStartMenuPressedDownOnIndex(controllerIndex))
+            {
+                OnStartMenuPressed(SetButtonEvent(ref startMenuPressed, true, 1f));
+                EmitAlias(ButtonAlias.Start_Menu_Press, true, 1f, ref startMenuPressed);
+            }
+            else if (VRTK_SDK_Bridge.IsStartMenuPressedUpOnIndex(controllerIndex))
+            {
+                OnStartMenuReleased(SetButtonEvent(ref startMenuPressed, false, 0f));
+                EmitAlias(ButtonAlias.Start_Menu_Press, false, 0f, ref startMenuPressed);
+            }
+
             // Save current touch and trigger settings to detect next change.
             touchpadAxis = new Vector2(currentTouchpadAxis.x, currentTouchpadAxis.y);
             triggerAxis = new Vector2(currentTriggerAxis.x, currentTriggerAxis.y);
@@ -1398,13 +1448,6 @@ namespace VRTK
 
             hairTriggerDelta = VRTK_SDK_Bridge.GetTriggerHairlineDeltaOnIndex(controllerIndex);
             hairGripDelta = VRTK_SDK_Bridge.GetGripHairlineDeltaOnIndex(controllerIndex);
-        }
-
-        private void SetVelocity()
-        {
-            var controllerIndex = VRTK_DeviceFinder.GetControllerIndex(gameObject);
-            controllerVelocity = VRTK_SDK_Bridge.GetVelocityOnIndex(controllerIndex);
-            controllerAngularVelocity = VRTK_SDK_Bridge.GetAngularVelocityOnIndex(controllerIndex);
         }
     }
 }
