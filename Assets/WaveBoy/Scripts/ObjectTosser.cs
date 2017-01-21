@@ -26,7 +26,7 @@ public class ObjectTosser : MonoBehaviour {
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100)) {
                 Debug.DrawLine(ray.origin, hit.point);
-                GameObject particles = (GameObject)Instantiate(WaveParticlesPrefab, hit.transform.position, this.transform.rotation);
+                Instantiate(WaveParticlesPrefab, hit.transform.position, this.transform.rotation);
             }
         }
     }
