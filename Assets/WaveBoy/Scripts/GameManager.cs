@@ -5,12 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
-    public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
+    //Static instance of GameManager which allows it to be accessed by any other script.
+    public static GameManager instance = null;
 
     public int score;
     private int highScore;
-    private int life;
-    
+    private int life;    
     private int wave;
 
     public int HighScore
