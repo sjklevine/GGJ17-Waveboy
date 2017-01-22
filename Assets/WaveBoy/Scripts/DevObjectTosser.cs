@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectTosser : MonoBehaviour {
+public class DevObjectTosser : MonoBehaviour {
     public GameObject TossedObjectPrefab;
     public GameObject WaveParticlesPrefab;
+    public GameObject scorePrefab;
 
     private void Update()
     {
@@ -28,6 +29,21 @@ public class ObjectTosser : MonoBehaviour {
             if (Physics.Raycast(ray, out hit, 100)) {
                 Debug.DrawLine(ray.origin, hit.point);
                 Instantiate(WaveParticlesPrefab, hit.transform.position, this.transform.rotation);
+
+                if (hit.collider.gameObject.tag == "Person")
+                {
+                    //Take this opportunity to make the person animate!
+                    Animator personAnim = hit.collider.gameObject.GetComponent<Animator>();
+                    personAnim.SetTrigger("OnWave");
+
+                    // Pop a nice score object!
+                    GameObject scoreObj = (GameObject)GameObject.Instantiate(scorePrefab, hit.point, Camera.main.transform.rotation);
+                    ScoreShownOnHit scoreScript = scoreObj.GetComponent<ScoreShownOnHit>();
+                    scoreScript.UpdateTextAndGo("+1000");
+
+                    // TODO: Tell the gamemanager!
+                    //GameManager.instance.score +=00 pointsScored;
+                }
             }
         }
     }
