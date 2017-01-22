@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Scorehit : MonoBehaviour {
 
-    public int valueScore = 100;
-	// Use this for initialization
-	void Start () {
+    public int valueScore = 500;
+    // Use this for initialization
+    void Start () {
 		
 	}
 
