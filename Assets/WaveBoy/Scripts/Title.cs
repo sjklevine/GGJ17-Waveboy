@@ -13,6 +13,7 @@ public class Title : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
+       
         GameManager.instance.NewGame();
         SceneManager.LoadScene("Town"); 
     }

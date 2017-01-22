@@ -92,13 +92,10 @@ public class GameManager : MonoBehaviour {
         life--;
         if (life == 0)
         {
-            if (score > highScore)
-                highScore = score;
+           
             GameOver();
         }
-        else {
-
-        }
+        
     }
     //increase wave 
     void NextLevel()
@@ -113,8 +110,11 @@ public class GameManager : MonoBehaviour {
 
 
     //go back to title screen
-    void GameOver()
+    public void GameOver()
     {
+
+        if (score > highScore)
+            highScore = score;
         SceneManager.LoadScene("Title");
     }
 }
