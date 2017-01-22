@@ -10,10 +10,11 @@ public class ObjectTosser : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Debug.Log("DEBUG: TOSSING A PAPER");
+            //Debug.Log("DEBUG: TOSSING A PAPER");
             Vector3 fwd = this.transform.forward;
             Vector3 tossStart = this.transform.position + fwd * 1.0f;
             GameObject tossedObject = (GameObject)Instantiate(TossedObjectPrefab, tossStart, this.transform.rotation);
+            tossedObject.GetComponent<Rigidbody>().isKinematic = false;
             tossedObject.GetComponent<Rigidbody>().AddTorque(Vector3.up * 100f);
             tossedObject.GetComponent<Rigidbody>().AddForce(fwd * 1000f);
         } else if (Input.GetKeyDown(KeyCode.Alpha2))
