@@ -7,17 +7,15 @@ using VRTK.SecondaryControllerGrabActions;
 public class VRTK_WaveBoyCustomGrabAction : VRTK_SwapControllerGrabAction {
 
     public GameObject thisPrefab;
-    private Vector3 startPos;
     private Transform savedParent;
 
     public void Start()
     {
-        startPos = this.transform.localPosition;
         savedParent = this.transform.parent;
     }
 
     /// <summary>
-    /// The OnDropAction method is executed when the current grabbed object is dropped and can be used up to clean up any secondary grab actions.
+    /// The OnDropAction method is executed when the current gra0bbed object is dropped and can be used up to clean up any secondary grab actions.
     /// </summary>
     public override void OnDropAction()
     {
@@ -29,7 +27,7 @@ public class VRTK_WaveBoyCustomGrabAction : VRTK_SwapControllerGrabAction {
         Vector3 finalVelocity = this.GetComponent<Rigidbody>().velocity;
         //Debug.Log("ON DROP ACTION, velocity = " + cubeVelocity + ", add = " + addedVelocity + ", total = " + finalVelocity);
 
-        GameObject newGuy = (GameObject) GameObject.Instantiate(thisPrefab, this.transform.parent.position + startPos, Quaternion.identity);
+        GameObject newGuy = (GameObject) GameObject.Instantiate(thisPrefab, savedParent.transform.position, Quaternion.identity);
         newGuy.transform.SetParent(savedParent);
     }
 }
