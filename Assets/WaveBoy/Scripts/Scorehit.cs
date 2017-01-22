@@ -11,9 +11,9 @@ public class Scorehit : MonoBehaviour {
 	}
 
 
-    private void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.tag == "Paper")
+        if (other.gameObject.tag == "Paper")
         {
             GameManager.instance.score += valueScore;
             Destroy(this.gameObject);

@@ -7,10 +7,10 @@ public class End : MonoBehaviour {
 
 
 
-    void OnTriggerEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        Debug.Log(collision);
-        if (collision.gameObject.tag == "Player")
+        Debug.Log(other.gameObject);
+        if (other.gameObject.tag == "Player")
             StartCoroutine("EndingWait");
 
     }
