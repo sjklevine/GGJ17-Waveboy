@@ -8,10 +8,12 @@ public class VRTK_WaveBoyCustomGrabAction : VRTK_SwapControllerGrabAction {
 
     public GameObject thisPrefab;
     private Vector3 startPos;
+    private Transform savedParent;
 
     public void Start()
     {
         startPos = this.transform.localPosition;
+        savedParent = this.transform.parent;
     }
 
     /// <summary>
@@ -27,6 +29,7 @@ public class VRTK_WaveBoyCustomGrabAction : VRTK_SwapControllerGrabAction {
         Vector3 finalVelocity = this.GetComponent<Rigidbody>().velocity;
         //Debug.Log("ON DROP ACTION, velocity = " + cubeVelocity + ", add = " + addedVelocity + ", total = " + finalVelocity);
 
-        GameObject.Instantiate(thisPrefab, this.transform.parent.position + startPos, Quaternion.identity);
+        GameObject newGuy = (GameObject) GameObject.Instantiate(thisPrefab, this.transform.parent.position + startPos, Quaternion.identity);
+        newGuy.transform.SetParent(savedParent);
     }
 }
