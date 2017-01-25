@@ -20,5 +20,6 @@ public class ScoreShownOnHit : MonoBehaviour {
             {
                 GameObject.Destroy(this.gameObject);
             });
+        
     }
 }

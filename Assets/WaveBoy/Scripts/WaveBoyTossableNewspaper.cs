@@ -26,7 +26,7 @@ public class WaveBoyTossableNewspaper : MonoBehaviour {
                     break;
                 case "Person":
                     pointsScored = 500;
-
+                    
                     //Take this opportunity to make the person animate!
                     Animator personAnim = collision.gameObject.GetComponent<Animator>();
                     personAnim.SetTrigger("OnHit");
@@ -46,7 +46,7 @@ public class WaveBoyTossableNewspaper : MonoBehaviour {
                 scoreScript.UpdateTextAndGo("+" + pointsScored);
 
                 // TODO: Tell the gamemanager!
-                //GameManager.instance.score +=00 pointsScored;
+                 GameManager.instance.score += pointsScored;
 
                 // Stop this object from scoring again!
                 // But don't delete it, we need that sound effect.

@@ -9,11 +9,11 @@ public class Title : MonoBehaviour {
 	void Start () {
 		
 	}
-	
 
-    private void OnCollisionEnter(Collision collision)
+
+    void OnTriggerEnter(Collider other)
     {
-       
+        Debug.Log("pedal");
         GameManager.instance.NewGame();
         SceneManager.LoadScene("Town"); 
     }

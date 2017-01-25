@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
+    public TextMesh scoreText;
+    public GameObject scoreHolder;
 
     //Static instance of GameManager which allows it to be accessed by any other script.
     public static GameManager instance = null;
@@ -71,10 +73,6 @@ public class GameManager : MonoBehaviour {
         InitGame();
     }
 
-    // Use this for initialization
-    void Start () {
-		
-	}
 	
 	
 
@@ -117,4 +115,5 @@ public class GameManager : MonoBehaviour {
             highScore = score;
         SceneManager.LoadScene("Title");
     }
+
 }

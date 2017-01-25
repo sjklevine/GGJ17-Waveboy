@@ -5,7 +5,8 @@ using UnityEngine;
 public class WaveBoyWaveDetector : MonoBehaviour {
     public GameObject scorePrefab;
     private OvrAvatar mahAvatar;
-
+    //private bool allowedToWave = true;
+    
     void Start()
     {
         mahAvatar = this.GetComponent<OvrAvatar>();
@@ -42,6 +43,13 @@ public class WaveBoyWaveDetector : MonoBehaviour {
             }
         }
     }
+    /*
+    private IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(3.0f);
+        allowedToWave = true;
+    }
+    */
 
     private void DoWaveFromDirectionVector(Ray originalFamousRay)
     {
@@ -78,8 +86,7 @@ public class WaveBoyWaveDetector : MonoBehaviour {
                         int upperBodyLayer = personAnim.GetLayerIndex("UpperBody");
                         AnimatorStateInfo currentStateInfo = personAnim.GetCurrentAnimatorStateInfo(upperBodyLayer);
                         bool isWaving = currentStateInfo.IsName("UpperBody.OnWave");
-                        if (!isWaving)
-                        {
+                        if (!isWaving && !personAnim.GetBool("HasWaved")) {
                             // MAKE 'EM WAVE
                             personAnim.SetTrigger("OnWave");
 
@@ -89,9 +96,12 @@ public class WaveBoyWaveDetector : MonoBehaviour {
                             scoreScript.UpdateTextAndGo("+1000");
 
                             // TODO: Tell the gamemanager!
-                            //GameManager.instance.score +=00 pointsScored;
+                            GameManager.instance.score += 1000;
 
+                            //allowedToWave = false;
+                            //StartCoroutine(Wait());
                             triggeredWave = true;
+                            personAnim.SetBool("HasWaved", true);
                         }
                     }
                 }

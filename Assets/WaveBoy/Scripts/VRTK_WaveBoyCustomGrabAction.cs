@@ -27,7 +27,17 @@ public class VRTK_WaveBoyCustomGrabAction : VRTK_SwapControllerGrabAction {
         Vector3 finalVelocity = this.GetComponent<Rigidbody>().velocity;
         //Debug.Log("ON DROP ACTION, velocity = " + cubeVelocity + ", add = " + addedVelocity + ", total = " + finalVelocity);
 
-        GameObject newGuy = (GameObject) GameObject.Instantiate(thisPrefab, savedParent.transform.position, Quaternion.identity);
-        newGuy.transform.SetParent(savedParent);
+        makeNewGuy(addedVelocity);
+        makeNewGuy(addedVelocity);
+        makeNewGuy(addedVelocity);
+    }
+
+    public void makeNewGuy(Vector3 addedVelocity)
+    {
+        GameObject newGuy = (GameObject)GameObject.Instantiate(thisPrefab, savedParent.transform.position + Vector3.up * 0.1f, Quaternion.identity);
+        newGuy.transform.SetParent(savedParent, true);
+        newGuy.GetComponent<Rigidbody>().velocity += addedVelocity;
+        newGuy.GetComponent<Rigidbody>().isKinematic = false;
+
     }
 }
