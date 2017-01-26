@@ -24,15 +24,12 @@ public class DevObjectTosser : MonoBehaviour {
             // So let's assume that the "wave" vector direction is just fwd this time.
             // Later it should be from the player, through the hand position.
             Vector3 fwd = this.transform.forward;
-            DoWaveFromDirectionVector(fwd);
+            DoWaveFromDirectionVector(new Ray(this.transform.position, fwd));
         }
     }
 
-    private void DoWaveFromDirectionVector(Vector3 fwd)
+    private void DoWaveFromDirectionVector(Ray originalFamousRay)
     {
-
-        Ray originalFamousRay = new Ray(this.transform.position, fwd);
-
         // We actually want to do like a ton MORE rays in a box around this one,
         // and wave at whoever they all hit.  Raycasts are cheap!
         int numRaycastsX = 10;
@@ -48,7 +45,8 @@ public class DevObjectTosser : MonoBehaviour {
                 Vector3 localDirectionAdjust = new Vector3(-rayBoxWidth / 2f + rayBoxWidth * i / (numRaycastsX - 1),
                                                            -rayBoxHeight / 2f + rayBoxHeight * j / (numRaycastsY - 1),
                                                            0);
-                Vector3 newOrigin = originalFamousRay.origin + this.transform.TransformDirection(localDirectionAdjust);
+                //Vector3 newOrigin = originalFamousRay.origin + this.transform.TransformDirection(localDirectionAdjust);
+                Vector3 newOrigin = originalFamousRay.origin + localDirectionAdjust;
                 Ray newRay = new Ray(newOrigin, originalFamousRay.direction);
                 RaycastHit hit;
                 float rayDist = 100f;
@@ -65,7 +63,8 @@ public class DevObjectTosser : MonoBehaviour {
                         int upperBodyLayer = personAnim.GetLayerIndex("UpperBody");
                         AnimatorStateInfo currentStateInfo = personAnim.GetCurrentAnimatorStateInfo(upperBodyLayer);
                         bool isWaving = currentStateInfo.IsName("UpperBody.OnWave");
-                        if (!isWaving) {
+                        if (!isWaving && !personAnim.GetBool("HasWaved"))
+                        {
                             // MAKE 'EM WAVE
                             personAnim.SetTrigger("OnWave");
 
@@ -74,10 +73,15 @@ public class DevObjectTosser : MonoBehaviour {
                             ScoreShownOnHit scoreScript = scoreObj.GetComponent<ScoreShownOnHit>();
                             scoreScript.UpdateTextAndGo("+1000");
 
-                            // TODO: Tell the gamemanager!
-                            //GameManager.instance.score +=00 pointsScored;
+                            // Tell the gamemanager!
+                            GameManager.instance.score += 1000;
+
+                            // Have them play a voice effect!
+                            PeopleSpeach voice = hit.collider.gameObject.GetComponent<PeopleSpeach>();
+                            voice.GetComponent<PeopleSpeach>().PlayVoice();
 
                             triggeredWave = true;
+                            personAnim.SetBool("HasWaved", true);
                         }
                     }
                 }

@@ -27,9 +27,14 @@ public class VRTK_WaveBoyCustomGrabAction : VRTK_SwapControllerGrabAction {
         Vector3 finalVelocity = this.GetComponent<Rigidbody>().velocity;
         //Debug.Log("ON DROP ACTION, velocity = " + cubeVelocity + ", add = " + addedVelocity + ", total = " + finalVelocity);
 
+        // Spawn THREE new papers in the cart!  This ensures you never run out, and is also pleasantly silly.
         makeNewGuy(addedVelocity);
         makeNewGuy(addedVelocity);
         makeNewGuy(addedVelocity);
+
+        // To aid in being able to wave after you toss, lock out waves for a period after dropping.
+        //playerTransform.GetComponent<WaveBoyWaveDetector>().ResetLockoutTimer();
+        WaveBoyWaveDetector.triggerLockout = true;
     }
 
     public void makeNewGuy(Vector3 addedVelocity)

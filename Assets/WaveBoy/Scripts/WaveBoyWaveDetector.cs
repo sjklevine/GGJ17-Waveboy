@@ -5,52 +5,59 @@ using UnityEngine;
 public class WaveBoyWaveDetector : MonoBehaviour {
     public GameObject scorePrefab;
     private OvrAvatar mahAvatar;
-    public GameObject voice;
-    //private bool allowedToWave = true;
+
+    public static bool triggerLockout = false;
+
+    private float lockoutPeriod = 0.75f;
+    private float lockoutTimer;
 
     void Start()
     {
         mahAvatar = this.GetComponent<OvrAvatar>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (mahAvatar.Driver != null)
+        // Check to see if we're still in a wave lockout period from dropping a paper.
+        if (triggerLockout)
         {
-            // Get the current pose from the driver
-            OvrAvatarDriver.PoseFrame pose;
-            if (mahAvatar.Driver.GetCurrentPose(out pose))
+            lockoutTimer = lockoutPeriod;
+            triggerLockout = false;
+        }
+        if (lockoutTimer > 0)
+        {
+            lockoutTimer -= Time.deltaTime;
+        } else
+        { 
+            if (mahAvatar.Driver != null)
             {
-                // Update the various avatar components with this pose
-                if (mahAvatar.ControllerLeft != null)
+                // Get the current pose from the driver
+                OvrAvatarDriver.PoseFrame pose;
+                if (mahAvatar.Driver.GetCurrentPose(out pose))
                 {
-                    if (pose.controllerLeftPose.indexTrigger == 0 && pose.controllerLeftPose.handTrigger == 0)
+                    // Update the various avatar components with this pose
+                    if (mahAvatar.ControllerLeft != null)
                     {
-                        Vector3 leftDir = mahAvatar.HandLeft.transform.position - Camera.main.transform.position;
-                        Ray leftRay = new Ray(Camera.main.transform.position, leftDir);
-                        DoWaveFromDirectionVector(leftRay);
+                        if (pose.controllerLeftPose.indexTrigger == 0 && pose.controllerLeftPose.handTrigger == 0)
+                        {
+                            Vector3 leftDir = mahAvatar.HandLeft.transform.position - Camera.main.transform.position;
+                            Ray leftRay = new Ray(Camera.main.transform.position, leftDir);
+                            DoWaveFromDirectionVector(leftRay);
+                        }
                     }
-                }
-                if (mahAvatar.ControllerRight != null)
-                {
-                    if (pose.controllerRightPose.indexTrigger == 0 && pose.controllerRightPose.handTrigger == 0)
+                    if (mahAvatar.ControllerRight != null)
                     {
-                        Vector3 rightDir = mahAvatar.HandRight.transform.position - Camera.main.transform.position;
-                        Ray rightRay = new Ray(Camera.main.transform.position, rightDir);
-                        DoWaveFromDirectionVector(rightRay);
+                        if (pose.controllerRightPose.indexTrigger == 0 && pose.controllerRightPose.handTrigger == 0)
+                        {
+                            Vector3 rightDir = mahAvatar.HandRight.transform.position - Camera.main.transform.position;
+                            Ray rightRay = new Ray(Camera.main.transform.position, rightDir);
+                            DoWaveFromDirectionVector(rightRay);
+                        }
                     }
                 }
             }
         }
     }
-    /*
-    private IEnumerator Wait()
-    {
-        yield return new WaitForSeconds(3.0f);
-        allowedToWave = true;
-    }
-    */
 
     private void DoWaveFromDirectionVector(Ray originalFamousRay)
     {
@@ -96,12 +103,13 @@ public class WaveBoyWaveDetector : MonoBehaviour {
                             ScoreShownOnHit scoreScript = scoreObj.GetComponent<ScoreShownOnHit>();
                             scoreScript.UpdateTextAndGo("+1000");
 
-                            // TODO: Tell the gamemanager!
+                            // Tell the gamemanager!
                             GameManager.instance.score += 1000;
-                            //TODO: check if male or female
+
+                            // Have them play a voice effect!
+                            PeopleSpeach voice = hit.collider.gameObject.GetComponent<PeopleSpeach>();
                             voice.GetComponent<PeopleSpeach>().PlayVoice();
-                            //allowedToWave = false;
-                            //StartCoroutine(Wait());
+
                             triggeredWave = true;
                             personAnim.SetBool("HasWaved", true);
                         }
