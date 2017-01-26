@@ -5,8 +5,9 @@ using UnityEngine;
 public class WaveBoyWaveDetector : MonoBehaviour {
     public GameObject scorePrefab;
     private OvrAvatar mahAvatar;
+    public GameObject voice;
     //private bool allowedToWave = true;
-    
+
     void Start()
     {
         mahAvatar = this.GetComponent<OvrAvatar>();
@@ -97,7 +98,8 @@ public class WaveBoyWaveDetector : MonoBehaviour {
 
                             // TODO: Tell the gamemanager!
                             GameManager.instance.score += 1000;
-
+                            //TODO: check if male or female
+                            voice.GetComponent<PeopleSpeach>().PlayVoice();
                             //allowedToWave = false;
                             //StartCoroutine(Wait());
                             triggeredWave = true;
