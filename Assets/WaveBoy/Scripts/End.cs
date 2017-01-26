@@ -5,7 +5,8 @@ using UnityEngine;
 public class End : MonoBehaviour {
 
     public GameObject player;
-
+    public TextMesh scoreText;
+    public GameObject scoreHolder;
 
     void OnTriggerEnter(Collider other)
     {
@@ -18,8 +19,8 @@ public class End : MonoBehaviour {
     IEnumerator EndingWait()
     {
         player.GetComponent<AudioSource>().Stop();
-        GameManager.instance.scoreHolder.SetActive(true);
-        GameManager.instance.scoreText.text = "Score: " + GameManager.instance.score;
+        scoreHolder.SetActive(true);
+        scoreText.text = "Score: " + GameManager.instance.score;
         this.GetComponent<AudioSource>().Play();
         yield return new WaitForSeconds(10f);
         GameManager.instance.GameOver();
