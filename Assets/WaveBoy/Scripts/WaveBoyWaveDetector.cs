@@ -108,8 +108,11 @@ public class WaveBoyWaveDetector : MonoBehaviour {
 
                             // Have them play a voice effect!
                             PeopleSpeach voice = hit.collider.gameObject.GetComponent<PeopleSpeach>();
-                            voice.GetComponent<PeopleSpeach>().PlayVoice();
-
+							if (voice == null) {
+								Debug.LogError ("Missing voice component on NPC!");
+							} else {
+								voice.GetComponent<PeopleSpeach> ().PlayVoice ();
+							}
                             triggeredWave = true;
                             personAnim.SetBool("HasWaved", true);
                         }
@@ -118,7 +121,7 @@ public class WaveBoyWaveDetector : MonoBehaviour {
                 else
                 {
                     // No hit, but pretty editor line
-                    Debug.DrawLine(newRay.origin, newRay.origin + newRay.direction * rayDist, Color.white, 4.0f);
+                    //Debug.DrawLine(newRay.origin, newRay.origin + newRay.direction * rayDist, Color.white, 4.0f);
                 }
 
             }
