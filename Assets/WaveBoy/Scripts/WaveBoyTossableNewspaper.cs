@@ -12,8 +12,8 @@ public class WaveBoyTossableNewspaper : MonoBehaviour {
     {
         //Debug.Log("ON COLLISION ENTER BABY");
 
-        // Always play some audio!
-        this.GetComponent<AudioSource>().Play();
+        // Always play some audio!  Later, right now this is way too noisy.
+        //this.GetComponent<AudioSource>().Play();
 
         // Only score once per collision; seems dumb, but prevents weird repeat behavior.
         if (!alreadyScored) { 
@@ -40,6 +40,9 @@ public class WaveBoyTossableNewspaper : MonoBehaviour {
             }
             if (pointsScored > 0)
             {
+                // Play the audio on points scored now!
+                this.GetComponent<AudioSource>().Play();
+
                 // Pop a nice score object!
                 GameObject scoreObj = (GameObject) GameObject.Instantiate(scorePrefab, collision.transform.position, Camera.main.transform.rotation);
                 ScoreShownOnHit scoreScript = scoreObj.GetComponent<ScoreShownOnHit>();

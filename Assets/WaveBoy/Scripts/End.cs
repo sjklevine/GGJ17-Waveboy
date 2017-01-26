@@ -10,10 +10,9 @@ public class End : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject);
-        if (other.gameObject.tag == "end")
+        if (other.gameObject.tag == "Player") { 
             StartCoroutine("EndingWait");
-
+        }
     }
 
     IEnumerator EndingWait()
@@ -22,7 +21,7 @@ public class End : MonoBehaviour {
         scoreHolder.SetActive(true);
         scoreText.text = "Score: " + GameManager.instance.score;
         this.GetComponent<AudioSource>().Play();
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(30f);
         GameManager.instance.GameOver();
         yield break;
     }

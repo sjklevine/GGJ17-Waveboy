@@ -47,6 +47,9 @@ public class VZPlayer : MonoBehaviour
    public float SlowRotateLimit = 0.0f; // amount of turn at zero speed
    public bool Reverse = false;
 
+    //SAM WAS HERE
+    public Title titleScript;
+
    public static VZPlayer Instance { get; private set; }
     public VZController Controller;
 
@@ -322,6 +325,12 @@ public class VZPlayer : MonoBehaviour
       SetState(kStateNormal);
 
       StartCoroutine(FadeDown(2));
+
+      // Sam here - if title, do title sequence
+      if (this.titleScript != null)
+      {
+          this.titleScript.StartTitleSequence();
+      }
    }
 
    protected virtual void LandingSmoothed()
